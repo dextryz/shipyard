@@ -156,6 +156,7 @@ func Main() error {
 	if err != nil {
 		return err
 	}
+    time := nostr.Now() + nostr.Timestamp(ts)
 
 	kind, err := strconv.Atoi(args[1])
 	if err != nil {
@@ -165,7 +166,7 @@ func Main() error {
 	err = jobRequest(ctx, cfg,
 		kind,
 		args[2],
-		nostr.Timestamp(ts),
+        time,
 	)
 	if err != nil {
 		return err
