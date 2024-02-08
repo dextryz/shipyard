@@ -1,4 +1,4 @@
-package main
+package shipyard
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"sync"
 
 	"github.com/nbd-wtf/go-nostr"
@@ -135,12 +136,14 @@ func jobRequest(ctx context.Context, cfg *Config, kind int, content string, time
 	return nil
 }
 
-func main() {
+func Main() error {
 
 	cfg, err := loadConfig()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	args := os.Args[1:]
 
 	ctx := context.Background()
 
@@ -149,11 +152,24 @@ func main() {
 	// 		log.Fatal(err)
 	// 	}
 
-	time := nostr.Now() + 30
-
-	err = jobRequest(ctx, cfg, nostr.KindTextNote, "Publish via #shipyard with a 30 sec delay", time)
+	ts, err := strconv.Atoi(args[0])
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
+	kind, err := strconv.Atoi(args[1])
+	if err != nil {
+		return err
+	}
+
+	err = jobRequest(ctx, cfg,
+		kind,
+		args[2],
+		nostr.Timestamp(ts),
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

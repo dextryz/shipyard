@@ -4,3 +4,6 @@ fmt:
 
 run:
 	go run .
+
+build:
+	go build -o ship ./cmd/shipyard/
